@@ -6,31 +6,29 @@
 <title>Reconfiguración de Grupos · Gestión de Proyectos</title>
 <style>
   /* ---- Sistema de diseño --------------------------------------------------
-     Concepto: "bitácora de proyecto". Nada de mediación blanda ni tonos
-     institucionales genéricos: la página se lee como un registro de obra,
-     un libro de actas donde cada movimiento queda asentado y a la vista.
-     Paleta terrosa de papel técnico + un índigo de tinta para las acciones.
+     Registro público de reconfiguración de grupos, identidad UTN.
+     Fondo neutro claro + azul institucional UTN como color de acción.
+     El celeste UTN se reserva para acentos y el estado en curso.
   ------------------------------------------------------------------------- */
   :root {
-    --papel:      #f0ece1;   /* fondo, papel técnico */
-    --papel-2:    #e7e1d2;   /* fichas */
-    --tinta:      #23324d;   /* índigo tinta, texto y acciones */
-    --tinta-soft: #4a5a78;
-    --linea:      #c9c0ac;   /* hairlines */
-    --sello:      #a23b2e;   /* sello / estados vencidos */
-    --verde:      #3f6b52;   /* aceptado */
-    --ambar:      #9a6b1e;   /* pendiente */
-    --radio:      2px;
+    --papel:      #f5f6f8;   /* fondo neutro claro */
+    --papel-2:    #ffffff;   /* fichas */
+    --tinta:      #003a70;   /* azul institucional UTN, texto y acciones */
+    --tinta-soft: #4a6489;
+    --celeste:    #009fe3;   /* celeste UTN, acento */
+    --linea:      #d5dae2;   /* hairlines */
+    --sello:      #b3261e;   /* estados vencidos / rechazo */
+    --verde:      #2e7d4f;   /* aceptado */
+    --ambar:      #b06a00;   /* pendiente */
+    --radio:      3px;
     --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
     --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background:
-      linear-gradient(var(--linea) 1px, transparent 1px) 0 0 / 100% 28px,
-      var(--papel);
-    color: var(--tinta);
+    background: var(--papel);
+    color: #1b2733;
     font-family: var(--sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -88,7 +86,7 @@
     transition: all .12s;
   }
   nav button .n {
-    color: var(--sello);
+    color: var(--celeste);
     margin-right: 8px;
     font-weight: 600;
   }
@@ -201,7 +199,7 @@
     flex-wrap: wrap;
   }
   .ruta { font-weight: 700; font-size: 16px; }
-  .ruta .flecha { color: var(--sello); margin: 0 8px; }
+  .ruta .flecha { color: var(--celeste); margin: 0 8px; }
   .estado {
     font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
     text-transform: uppercase; padding: 4px 9px; border-radius: 20px;
@@ -273,15 +271,9 @@
       <p class="sub">Completá el pedido de reincorporación. Fundamentá bien:
         el grupo va a leer esto para decidir.</p>
 
-      <div class="fila">
-        <div class="campo">
-          <label for="r-nombre">Tu nombre y apellido</label>
-          <input type="text" id="r-nombre" autocomplete="name">
-        </div>
-        <div class="campo">
-          <label for="r-legajo">Legajo</label>
-          <input type="text" id="r-legajo" inputmode="numeric">
-        </div>
+      <div class="campo">
+        <label for="r-nombre">Tu nombre y apellido</label>
+        <input type="text" id="r-nombre" autocomplete="name">
       </div>
 
       <div class="fila">
@@ -368,7 +360,7 @@
 
 <script>
 /* ===== CONFIGURACIÓN ===== */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxsVa6ZC0_QEnGSlmq8CoO6Z6CWQKIgqn-5g3dFaoRdlKMD5nx6L60x8qf2yvLqZHQ4/exec';
+const API_URL = 'PEGAR_ACA_LA_URL_/exec_DEL_APPS_SCRIPT';
 
 /* ===== Navegación por pestañas ===== */
 const tabs = document.querySelectorAll('nav button');
@@ -480,13 +472,13 @@ document.getElementById('btn-reclamar').addEventListener('click', async () => {
   try {
     const r = await post({
       accion: 'reclamar',
-      reclamante: nombre, legajo: val('r-legajo'),
+      reclamante: nombre,
       grupoAnterior: val('r-anterior'), grupoObjetivo: objetivo,
       motivo: motivo, justificacion: val('r-just')
     });
     if (r.ok) {
       aviso(msg, 'Reclamo registrado. Ya figura en el registro público.', 'ok');
-      ['r-nombre','r-legajo','r-anterior','r-objetivo','r-just'].forEach(id=>document.getElementById(id).value='');
+      ['r-nombre','r-anterior','r-objetivo','r-just'].forEach(id=>document.getElementById(id).value='');
       document.getElementById('r-motivo').value='';
     } else aviso(msg, r.error || 'No se pudo registrar.', 'err');
   } catch (e) { aviso(msg, 'Error de conexión.', 'err'); }
